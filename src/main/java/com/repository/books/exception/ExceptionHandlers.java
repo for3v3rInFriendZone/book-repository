@@ -20,8 +20,8 @@ public class ExceptionHandlers {
         .body(new ErrorMessage(exception.getMessage()));
   }
 
-  @ExceptionHandler(BookWriterFailedException.class)
-  public ResponseEntity<ErrorMessage> bookWriterExceptionHandler(BookWriterFailedException exception) {
+  @ExceptionHandler(FileWriterFailedException.class)
+  public ResponseEntity<ErrorMessage> bookWriterExceptionHandler(FileWriterFailedException exception) {
 
     log.warn("Writing book to *books.json* file failed, thrown with message: {}", exception.getMessage());
 

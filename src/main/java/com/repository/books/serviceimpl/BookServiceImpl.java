@@ -2,7 +2,7 @@ package com.repository.books.serviceimpl;
 
 import com.google.gson.Gson;
 import com.repository.books.exception.BookNotFoundException;
-import com.repository.books.exception.BookWriterFailedException;
+import com.repository.books.exception.FileWriterFailedException;
 import com.repository.books.model.Book;
 import com.repository.books.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import java.util.stream.Stream;
@@ -51,6 +49,8 @@ public class BookServiceImpl implements BookService {
 
   @Override
   public Book getBookById(String id) {
+
+    log.debug("Getting book by an id: {}", id);
 
     return this.getAllBooks().stream()
         .filter(book -> book.getId().equals(id))
@@ -116,7 +116,7 @@ public class BookServiceImpl implements BookService {
     } catch (IOException e) {
       log.error("There was an error while trying to write to a file *books.json* : {}", e.getMessage());
 
-      throw new BookWriterFailedException(e);
+      throw new FileWriterFailedException("*books.json*", e);
     }
   }
 
