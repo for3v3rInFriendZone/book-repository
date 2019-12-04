@@ -34,10 +34,7 @@ public class BookServiceImpl implements BookService {
 
     log.debug("Trying to get all books from *books.json* file...");
 
-    try {
-      InputStream input =  new FileInputStream(booksFilePath);
-      Reader reader = new InputStreamReader(input, StandardCharsets.UTF_8);
-
+    try (Reader reader = new InputStreamReader(new FileInputStream(booksFilePath), StandardCharsets.UTF_8)) {
       return Stream.of(gson.fromJson(reader, Book[].class)).collect(toList());
     } catch (IOException e) {
       log.error("Error while reading *books.json* file: {}", e.getMessage());
@@ -107,7 +104,7 @@ public class BookServiceImpl implements BookService {
     log.info("Trying to write books to *books.json* file");
 
     try {
-      Writer writer = new FileWriter(booksFilePath);
+      Writer writer = new OutputStreamWriter(new FileOutputStream(booksFilePath), StandardCharsets.UTF_8);
       gson.toJson(books, writer);
 
       writer.flush();
