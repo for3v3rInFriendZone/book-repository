@@ -10,8 +10,6 @@ public class AppConfig {
 
   @Bean
   public Gson gson() {
-    return new GsonBuilder()
-        .serializeNulls()
-        .create();
+    return new GsonBuilder().serializeNulls().disableHtmlEscaping().create();
   }
 }

@@ -10,11 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,9 +34,11 @@ public class BookServiceImpl implements BookService {
 
     log.debug("Trying to get all books from *books.json* file...");
 
-    try (Reader reader = new FileReader(booksFilePath)) {
-      return Stream.of(gson.fromJson(reader, Book[].class)).collect(toList());
+    try {
+      InputStream input =  new FileInputStream(booksFilePath);
+      Reader reader = new InputStreamReader(input, StandardCharsets.UTF_8);
 
+      return Stream.of(gson.fromJson(reader, Book[].class)).collect(toList());
     } catch (IOException e) {
       log.error("Error while reading *books.json* file: {}", e.getMessage());
 
@@ -114,7 +113,8 @@ public class BookServiceImpl implements BookService {
       writer.flush();
       writer.close();
     } catch (IOException e) {
-      log.error("There was an error while trying to write to a file *books.json* : {}", e.getMessage());
+      log.error(
+          "There was an error while trying to write to a file *books.json* : {}", e.getMessage());
 
       throw new FileWriterFailedException("*books.json*", e);
     }
