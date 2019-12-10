@@ -28,13 +28,16 @@ public class CategoryController {
   @GetMapping
   public List<Category> getAllCategories() {
 
-    log.info("*getAllBooks* API:");
+    log.info("*getAllCategories* API:");
 
     return this.categoryService.getAllCategories();
   }
 
   @GetMapping("/{id}")
   public Category getCategoryById(@PathVariable String id) {
+
+    log.debug("*getCategoryById: {}* API", id);
+
     return this.categoryService.getCategoryById(id);
   }
 
@@ -42,7 +45,7 @@ public class CategoryController {
   @ResponseStatus(HttpStatus.CREATED)
   public Category saveCategory(@RequestBody Category category) {
 
-    log.debug("*saveBook* API");
+    log.debug("*saveCategory* API");
 
     return this.categoryService.saveCategory(category);
   }
