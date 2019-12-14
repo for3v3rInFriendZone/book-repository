@@ -22,6 +22,6 @@ public class Book implements Serializable {
   private String publicationLanguage;
   private String form;
   private String keepingPlace;
-  private List<Category> categories;
+  private List<String> categories;
   private Long inventoryNumber;
 }
