@@ -1,1 +1,22 @@
-[{"id":"ea049769-81be-494e-97cb-bf93e5712f75","title":"Још један чудан наслов","authors":["Martel","Tanasije","Tester"],"publisher":null,"publishedYear":1976,"publication":null,"numberOfPages":322,"publicationLanguage":"Ruski","form":"Papirna","keepingPlace":"Novi Sad","categories":["Mehanika"],"inventoryNumber":412412142},{"id":"15f7245b-7389-4d5b-b5d2-68d083a17774","title":"Proba","authors":["test"," asd"," ewfew"," dqwd"],"publisher":"wqdwq","publishedYear":12321,"publication":"dwdwq","numberOfPages":3123,"publicationLanguage":"Руски","form":"Папирна","keepingPlace":"Друго","categories":["d60704c4-2905-494a-ab9a-ee48cc35c620","2d122661-24f4-4362-a71f-440f310a0332"],"inventoryNumber":31232132},{"id":"79875f67-102d-4c3f-80aa-edfed60c9904","title":"dwqdwqd","authors":["qdwd","m dqdwq"," dwqd wq"],"publisher":"d12d2","publishedYear":122,"publication":"1d21","numberOfPages":1221,"publicationLanguage":"Српски","form":"Електронска","keepingPlace":"Нови Сад","categories":null,"inventoryNumber":124124124},{"id":"cf91ff75-51cd-4cf9-bb66-59d6a3284007","title":"dqwdwqd","authors":["qwd"],"publisher":"dqwdwqw","publishedYear":21321,"publication":"d","numberOfPages":3213,"publicationLanguage":"Руски","form":"Папирна","keepingPlace":"Друго","categories":["2d122661-24f4-4362-a71f-440f310a0332"],"inventoryNumber":3213123}]
+[
+  {
+    "id": "19b81018-8ad2-4c30-98f8-275f8a0a71e3",
+    "title": "Злочин и Казна",
+    "authors": [
+      "Фјодор Михајлович Достојевски"
+    ],
+    "publisher": "Лагуна",
+    "publishedYear": 2009,
+    "publication": "Треће",
+    "numberOfPages": 542,
+    "publicationLanguage": "Српски",
+    "form": "Папирна",
+    "keepingPlace": "Нови Сад",
+    "categories": [
+      "d60704c4-2905-494a-ab9a-ee48cc35c620",
+      "2d122661-24f4-4362-a71f-440f310a0332"
+    ],
+    "inventoryNumber": 312312,
+    "createdAt": "18.12.2019."
+  }
+]

@@ -1,19 +1,12 @@
 package com.repository.books.controller;
 
+import com.repository.books.model.Book;
 import com.repository.books.model.Category;
 import com.repository.books.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,7 +23,7 @@ public class CategoryController {
 
     log.info("*getAllCategories* API:");
 
-    return this.categoryService.getAllCategories();
+    return this.categoryService.getAll();
   }
 
   @GetMapping("/{id}")
@@ -38,7 +31,7 @@ public class CategoryController {
 
     log.debug("*getCategoryById: {}* API", id);
 
-    return this.categoryService.getCategoryById(id);
+    return this.categoryService.getById(id);
   }
 
   @PostMapping
@@ -47,6 +40,18 @@ public class CategoryController {
 
     log.debug("*saveCategory* API");
 
-    return this.categoryService.saveCategory(category);
+    return this.categoryService.save(category);
+  }
+
+  @PutMapping("/{id}")
+  public Category updateCategory(@PathVariable String id, @RequestBody Category changedCategory) {
+
+    return this.categoryService.update(id, changedCategory);
+  }
+
+  @DeleteMapping("/{id}")
+  public Boolean deleteCategory(@PathVariable String id) {
+
+    return this.categoryService.remove(id);
   }
 }

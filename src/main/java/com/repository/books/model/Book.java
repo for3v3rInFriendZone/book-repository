@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -24,4 +25,5 @@ public class Book implements Serializable {
   private String keepingPlace;
   private List<String> categories;
   private Long inventoryNumber;
+  private String createdAt;
 }

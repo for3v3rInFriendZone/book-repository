@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,11 +32,12 @@ public class BookServiceImpl implements BookService {
   private final Gson gson;
 
   @Override
-  public List<Book> getAllBooks() {
+  public List<Book> getAll() {
 
     log.debug("Trying to get all books from *books.json* file...");
 
-    try (Reader reader = new InputStreamReader(new FileInputStream(booksFilePath), StandardCharsets.UTF_8)) {
+    try (Reader reader =
+        new InputStreamReader(new FileInputStream(booksFilePath), StandardCharsets.UTF_8)) {
       return Stream.of(gson.fromJson(reader, Book[].class)).collect(toList());
     } catch (IOException e) {
       log.error("Error while reading *books.json* file: {}", e.getMessage());
@@ -44,67 +47,69 @@ public class BookServiceImpl implements BookService {
   }
 
   @Override
-  public Book getBookById(String id) {
+  public Book getById(String id) {
 
     log.debug("Getting book by an id: {}", id);
 
-    return this.getAllBooks().stream()
+    return this.getAll().stream()
         .filter(book -> book.getId().equals(id))
         .findFirst()
         .orElseThrow(() -> new BookNotFoundException(id));
   }
 
   @Override
-  public Book saveBook(Book book) {
+  public Book save(Book book) {
 
     log.debug("Trying to save the new book: {}", book);
 
-    List<Book> books = getAllBooks();
+    List<Book> books = getAll();
     book.setId(UUID.randomUUID().toString());
+    book.setCreatedAt(getFormattedCreatedAt());
     books.add(book);
 
-    writeBookToFile(books);
+    writeBooksToFile(books);
 
     return book;
   }
 
   @Override
-  public Book updateBook(String bookId, Book updatedBook) {
+  public Book update(String id, Book changedBook) {
 
-    log.debug("Trying to update the book: {}", updatedBook);
+    log.debug("Trying to update the book: {}", changedBook);
 
-    checkIfBookExists(bookId);
+    checkIfExists(id);
 
     List<Book> updatedBooks =
-        getAllBooks().stream()
-            .map(book -> book.getId().equals(bookId) ? book = updatedBook : book)
+        getAll().stream()
+            .map(book -> book.getId().equals(id) ? book = changedBook : book)
             .collect(toList());
 
-    writeBookToFile(updatedBooks);
+    writeBooksToFile(updatedBooks);
 
-    return updatedBook;
+    return changedBook;
   }
 
   @Override
-  public Boolean deleteBook(String bookId) {
+  public Boolean remove(String id) {
 
-    log.debug("Trying to delete the book with an id: {}", bookId);
+    log.debug("Trying to delete the book with an id: {}", id);
 
-    checkIfBookExists(bookId);
+    checkIfExists(id);
 
-    List<Book> books = this.getAllBooks();
-    Boolean deleteResponse = books.removeIf(book -> book.getId().equals(bookId));
-    writeBookToFile(books);
+    List<Book> books = this.getAll();
+    Boolean deleteResponse = books.removeIf(book -> book.getId().equals(id));
+    writeBooksToFile(books);
 
     return deleteResponse;
   }
 
-  private void writeBookToFile(List<Book> books) {
+  private void writeBooksToFile(List<Book> books) {
 
     log.info("Trying to write books to *books.json* file");
 
     try {
-      Writer writer = new OutputStreamWriter(new FileOutputStream(booksFilePath), StandardCharsets.UTF_8);
+      Writer writer =
+          new OutputStreamWriter(new FileOutputStream(booksFilePath), StandardCharsets.UTF_8);
       gson.toJson(books, writer);
 
       writer.flush();
@@ -117,10 +122,18 @@ public class BookServiceImpl implements BookService {
     }
   }
 
-  private void checkIfBookExists(String bookId) {
+  private void checkIfExists(String bookId) {
 
-    if (this.getAllBooks().stream().noneMatch(book -> book.getId().equals(bookId))) {
+    if (this.getAll().stream().noneMatch(book -> book.getId().equals(bookId))) {
       throw new BookNotFoundException(bookId);
     }
+  }
+
+  private String getFormattedCreatedAt() {
+
+    LocalDate date = LocalDate.now();
+    DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
+
+    return date.format(formatters);
   }
 }

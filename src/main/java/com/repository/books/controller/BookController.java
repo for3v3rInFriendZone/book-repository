@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -32,12 +30,12 @@ public class BookController {
 
     log.info("*getAllBooks* API:");
 
-    return this.bookService.getAllBooks();
+    return this.bookService.getAll();
   }
 
   @GetMapping("/{id}")
   public Book getBookById(@PathVariable String id) {
-    return this.bookService.getBookById(id);
+    return this.bookService.getById(id);
   }
 
   @PostMapping
@@ -46,18 +44,18 @@ public class BookController {
 
     log.debug("*saveBook* API");
 
-    return this.bookService.saveBook(book);
+    return this.bookService.save(book);
   }
 
   @PutMapping("/{id}")
   public Book updateBook(@PathVariable String id, @RequestBody Book updatedBook) {
 
-    return this.bookService.updateBook(id, updatedBook);
+    return this.bookService.update(id, updatedBook);
   }
 
   @DeleteMapping("/{id}")
   public Boolean deleteBook(@PathVariable String id) {
 
-    return this.bookService.deleteBook(id);
+    return this.bookService.remove(id);
   }
 }
