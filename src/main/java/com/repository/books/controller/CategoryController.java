@@ -1,6 +1,5 @@
 package com.repository.books.controller;
 
-import com.repository.books.model.Book;
 import com.repository.books.model.Category;
 import com.repository.books.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -16,42 +15,42 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryController {
 
-  private final CategoryService categoryService;
+    private final CategoryService categoryService;
 
-  @GetMapping
-  public List<Category> getAllCategories() {
+    @GetMapping
+    public List<Category> getAllCategories() {
 
-    log.info("*getAllCategories* API:");
+        log.info("*getAllCategories* API:");
 
-    return this.categoryService.getAll();
-  }
+        return this.categoryService.getAll();
+    }
 
-  @GetMapping("/{id}")
-  public Category getCategoryById(@PathVariable String id) {
+    @GetMapping("/{id}")
+    public Category getCategoryById(@PathVariable String id) {
 
-    log.debug("*getCategoryById: {}* API", id);
+        log.debug("*getCategoryById: {}* API", id);
 
-    return this.categoryService.getById(id);
-  }
+        return this.categoryService.getById(id);
+    }
 
-  @PostMapping
-  @ResponseStatus(HttpStatus.CREATED)
-  public Category saveCategory(@RequestBody Category category) {
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Category saveCategory(@RequestBody Category category) {
 
-    log.debug("*saveCategory* API");
+        log.debug("*saveCategory* API");
 
-    return this.categoryService.save(category);
-  }
+        return this.categoryService.save(category);
+    }
 
-  @PutMapping("/{id}")
-  public Category updateCategory(@PathVariable String id, @RequestBody Category changedCategory) {
+    @PutMapping("/{id}")
+    public Category updateCategory(@PathVariable String id, @RequestBody Category changedCategory) {
 
-    return this.categoryService.update(id, changedCategory);
-  }
+        return this.categoryService.update(id, changedCategory);
+    }
 
-  @DeleteMapping("/{id}")
-  public Boolean deleteCategory(@PathVariable String id) {
+    @DeleteMapping("/{id}")
+    public Boolean deleteCategory(@PathVariable String id) {
 
-    return this.categoryService.remove(id);
-  }
+        return this.categoryService.remove(id);
+    }
 }
