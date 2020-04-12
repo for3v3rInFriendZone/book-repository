@@ -5,6 +5,7 @@ import com.repository.books.exception.BookNotFoundException;
 import com.repository.books.exception.FileWriterFailedException;
 import com.repository.books.model.Book;
 import com.repository.books.service.BookService;
+import io.micrometer.core.instrument.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import static java.nio.charset.StandardCharsets.*;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -28,6 +30,12 @@ public class BookServiceImpl implements BookService {
     @Value("${books.file.path}")
     private String booksFilePath;
 
+    @Value("${default.image.id}")
+    private String defaultImageId;
+
+    @Value("${base.image.url}")
+    private String baseImageUrl;
+
     private final Gson gson;
 
     @Override
@@ -36,7 +44,7 @@ public class BookServiceImpl implements BookService {
         log.debug("Trying to get all books from *books.json* file...");
 
         try (Reader reader =
-                     new InputStreamReader(new FileInputStream(booksFilePath), StandardCharsets.UTF_8)) {
+                     new InputStreamReader(new FileInputStream(booksFilePath), UTF_8)) {
             return Stream.of(gson.fromJson(reader, Book[].class)).collect(toList());
         } catch (IOException e) {
             log.error("Error while reading *books.json* file: {}", e.getMessage());
@@ -64,6 +72,7 @@ public class BookServiceImpl implements BookService {
         List<Book> books = getAll();
         book.setId(UUID.randomUUID().toString());
         book.setCreatedAt(getFormattedCreatedAt());
+        book.setImage(getBookImage(book.getImage()));
         books.add(book);
 
         writeBooksToFile(books);
@@ -78,6 +87,7 @@ public class BookServiceImpl implements BookService {
 
         checkIfExists(id);
         changedBook.setId(id);
+        changedBook.setImage(getBookImage(changedBook.getImage()));
 
         List<Book> updatedBooks =
                 getAll().stream()
@@ -109,14 +119,13 @@ public class BookServiceImpl implements BookService {
 
         try {
             Writer writer =
-                    new OutputStreamWriter(new FileOutputStream(booksFilePath), StandardCharsets.UTF_8);
+                    new OutputStreamWriter(new FileOutputStream(booksFilePath), UTF_8);
             gson.toJson(books, writer);
 
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            log.error(
-                    "There was an error while trying to write to a file *books.json* : {}", e.getMessage());
+            log.error("There was an error while trying to write to a file *books.json* : {}", e.getMessage());
 
             throw new FileWriterFailedException("*books.json*", e);
         }
@@ -135,5 +144,15 @@ public class BookServiceImpl implements BookService {
         DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
 
         return date.format(formatters);
+    }
+
+    private String getBookImage(String bookImage) {
+        return StringUtils.isBlank(bookImage)
+                ? this.baseImageUrl + this.defaultImageId
+                : this.baseImageUrl + parseBookIdFromLink(bookImage);
+    }
+
+    private String parseBookIdFromLink(String bookImageLink) {
+        return bookImageLink.split("=")[1];
     }
 }

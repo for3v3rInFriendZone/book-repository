@@ -25,5 +25,6 @@ public class Book implements Serializable {
   private String keepingPlace;
   private List<String> categories;
   private Long inventoryNumber;
+  private String image;
   private String createdAt;
 }
