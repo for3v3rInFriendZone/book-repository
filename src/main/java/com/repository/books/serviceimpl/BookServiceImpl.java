@@ -13,9 +13,12 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.text.Collator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -45,7 +48,8 @@ public class BookServiceImpl implements BookService {
 
         try (Reader reader =
                      new InputStreamReader(new FileInputStream(booksFilePath), UTF_8)) {
-            return Stream.of(gson.fromJson(reader, Book[].class)).collect(toList());
+            return sortByNameAscending(
+                    Stream.of(gson.fromJson(reader, Book[].class)).collect(toList()));
         } catch (IOException e) {
             log.error("Error while reading *books.json* file: {}", e.getMessage());
 
@@ -154,5 +158,17 @@ public class BookServiceImpl implements BookService {
 
     private String parseBookIdFromLink(String bookImageLink) {
         return bookImageLink.split("=")[1];
+    }
+
+    private List<Book> sortByNameAscending(List<Book> books) {
+        Locale locale = new Locale.Builder()
+                .setLanguage("sr")
+                .setScript("Cyrl")
+                .build();
+        Collator collator = Collator.getInstance(locale);
+
+        return books.stream()
+                .sorted(Comparator.comparing(Book::getTitle, collator))
+                .collect(toList());
     }
 }
