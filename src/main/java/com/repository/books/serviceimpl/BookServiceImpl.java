@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.text.Collator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +21,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static java.nio.charset.StandardCharsets.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -32,9 +31,6 @@ public class BookServiceImpl implements BookService {
 
     @Value("${books.file.path}")
     private String booksFilePath;
-
-    @Value("${default.image.id}")
-    private String defaultImageId;
 
     @Value("${base.image.url}")
     private String baseImageUrl;
@@ -152,7 +148,7 @@ public class BookServiceImpl implements BookService {
 
     private String getBookImage(String bookImage) {
         return StringUtils.isBlank(bookImage)
-                ? this.baseImageUrl + this.defaultImageId
+                ? null
                 : this.baseImageUrl + parseBookIdFromLink(bookImage);
     }
 
