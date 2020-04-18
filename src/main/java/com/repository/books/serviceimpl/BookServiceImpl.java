@@ -39,7 +39,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> getAll() {
-
         log.debug("Trying to get all books from *books.json* file...");
 
         try (Reader reader =
@@ -55,7 +54,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getById(String id) {
-
         log.debug("Getting book by an id: {}", id);
 
         return this.getAll().stream()
@@ -66,7 +64,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book save(Book book) {
-
         log.debug("Trying to save the new book: {}", book);
 
         List<Book> books = getAll();
@@ -82,7 +79,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book update(String id, Book changedBook) {
-
         log.debug("Trying to update the book: {}", changedBook);
 
         checkIfExists(id);
@@ -101,7 +97,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Boolean remove(String id) {
-
         log.debug("Trying to delete the book with an id: {}", id);
 
         checkIfExists(id);
@@ -114,7 +109,6 @@ public class BookServiceImpl implements BookService {
     }
 
     private void writeBooksToFile(List<Book> books) {
-
         log.info("Trying to write books to *books.json* file");
 
         try {
@@ -132,14 +126,12 @@ public class BookServiceImpl implements BookService {
     }
 
     private void checkIfExists(String bookId) {
-
         if (this.getAll().stream().noneMatch(book -> book.getId().equals(bookId))) {
             throw new BookNotFoundException(bookId);
         }
     }
 
     private String getFormattedCreatedAt() {
-
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatters = DateTimeFormatter.ofPattern("dd.MM.yyyy.");
 

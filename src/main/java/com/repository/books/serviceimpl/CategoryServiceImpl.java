@@ -1,6 +1,7 @@
 package com.repository.books.serviceimpl;
 
 import com.google.gson.Gson;
+import com.repository.books.exception.CategoryAlreadyExistsException;
 import com.repository.books.exception.CategoryNotFoundException;
 import com.repository.books.exception.FileWriterFailedException;
 import com.repository.books.model.Category;
@@ -59,6 +60,8 @@ public class CategoryServiceImpl implements CategoryService {
     log.debug("Trying to save the new category: {}", category);
 
     List<Category> categories = getAll();
+    categoryAlreadyExists(categories, category.getName());
+
     category.setId(UUID.randomUUID().toString());
     categories.add(category);
 
@@ -112,7 +115,8 @@ public class CategoryServiceImpl implements CategoryService {
       writer.close();
     } catch (IOException e) {
       log.error(
-          "There was an error while trying to write to a file *categories.json* : {}", e.getMessage());
+          "There was an error while trying to write to a file *categories.json* : {}",
+          e.getMessage());
 
       throw new FileWriterFailedException("*categories.json*", e);
     }
@@ -122,6 +126,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     if (this.getAll().stream().noneMatch(category -> category.getId().equals(categoryId))) {
       throw new CategoryNotFoundException(categoryId);
+    }
+  }
+
+  private void categoryAlreadyExists(List<Category> categories, String name) {
+    boolean exists =
+        categories.stream()
+            .map(Category::getName)
+            .anyMatch(categoryName -> categoryName.equals(name));
+
+    if (exists) {
+      throw new CategoryAlreadyExistsException(name);
     }
   }
 }

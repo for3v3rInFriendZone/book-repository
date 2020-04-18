@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionHandlers {
 
   @ExceptionHandler(BookNotFoundException.class)
-  public ResponseEntity<ErrorMessage> bookNotFoundExceptionHandler(BookNotFoundException exception) {
+  public ResponseEntity<ErrorMessage> bookNotFoundExceptionHandler(
+      BookNotFoundException exception) {
 
     log.warn("Book Not Found exception, thrown with message: {}", exception.getMessage());
 
@@ -21,11 +22,22 @@ public class ExceptionHandlers {
   }
 
   @ExceptionHandler(FileWriterFailedException.class)
-  public ResponseEntity<ErrorMessage> bookWriterExceptionHandler(FileWriterFailedException exception) {
+  public ResponseEntity<ErrorMessage> bookWriterExceptionHandler(
+      FileWriterFailedException exception) {
 
-    log.warn("Writing book to *books.json* file failed, thrown with message: {}", exception.getMessage());
+    log.warn(
+        "Writing book to *books.json* file failed, thrown with message: {}",
+        exception.getMessage());
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(new ErrorMessage(exception.getMessage()));
+  }
+
+  @ExceptionHandler(CategoryAlreadyExistsException.class)
+  public ResponseEntity<ErrorMessage> categoryAlreadyExistsExceptionHandler(
+      CategoryAlreadyExistsException exception) {
+
+    return ResponseEntity.status(HttpStatus.CONFLICT)
         .body(new ErrorMessage(exception.getMessage()));
   }
 }
