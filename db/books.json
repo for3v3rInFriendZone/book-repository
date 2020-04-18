@@ -1,1 +1,39 @@
-[{"id":"ce8c92f0-174f-4533-bbc0-9606d1716fba","title":"Идиот","authors":"Ф. М. Достојевски","publisher":"Лагуна","publishedYear":2019,"publication":"Прво","numberOfPages":447,"publicationLanguage":"Српски","form":"Папирна","keepingPlace":"Нови Сад","categories":["Математика","Физика","Књижевност","Механика"],"inventoryNumber":10000001,"image":null,"createdAt":"18.04.2020."}]
+[
+  {
+    "id": "ce8c92f0-174f-4533-bbc0-9606d1716fba",
+    "title": "Идиот",
+    "authors": "Ф. М. Достојевски",
+    "publisher": "Лагуна",
+    "publishedYear": 2019,
+    "publication": "Прво",
+    "numberOfPages": 447,
+    "publicationLanguage": "Српски",
+    "form": "Папирна",
+    "keepingPlace": "Нови Сад",
+    "categories": [
+      "Математика",
+      "Физика",
+      "Књижевност",
+      "Механика"
+    ],
+    "inventoryNumber": 10000001,
+    "image": null,
+    "createdAt": "17.04.2020."
+  },
+  {
+    "id": "9a6ef2ae-2fdc-452c-9ab4-34b6c771fd49",
+    "title": "Победа",
+    "authors": null,
+    "publisher": null,
+    "publishedYear": null,
+    "publication": null,
+    "numberOfPages": null,
+    "publicationLanguage": null,
+    "form": null,
+    "keepingPlace": null,
+    "categories": null,
+    "inventoryNumber": null,
+    "image": null,
+    "createdAt": "18.04.2020."
+  }
+]

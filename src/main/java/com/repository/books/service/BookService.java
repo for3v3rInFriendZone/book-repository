@@ -1,13 +1,15 @@
 package com.repository.books.service;
 
 import com.repository.books.model.Book;
+import com.repository.books.model.SortingDirection;
+import com.repository.books.model.SortingType;
 
 import java.io.IOException;
 import java.util.List;
 
 public interface BookService {
 
-  List<Book> getAll();
+  List<Book> getAll(SortingType sortingType, SortingDirection sortingDirection);
 
   Book getById(String id);
 
