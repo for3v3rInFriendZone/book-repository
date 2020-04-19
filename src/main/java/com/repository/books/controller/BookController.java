@@ -41,6 +41,12 @@ public class BookController {
     return this.bookService.save(book);
   }
 
+  @GetMapping("/search")
+  public List<Book> searchBooks(@RequestParam String term) {
+    log.debug("*searching books by term: {}", term);
+    return this.bookService.search(term);
+  }
+
   @PutMapping("/{id}")
   public Book updateBook(@PathVariable String id, @RequestBody Book updatedBook) {
 

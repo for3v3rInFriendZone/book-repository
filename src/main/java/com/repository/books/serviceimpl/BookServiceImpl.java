@@ -23,9 +23,9 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static com.repository.books.model.SortingDirection.*;
-import static com.repository.books.model.SortingType.*;
+import static com.repository.books.model.SortingDirection.ASC;
 import static com.repository.books.model.SortingType.CREATED_AT;
+import static com.repository.books.model.SortingType.TITLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
 
@@ -59,10 +59,23 @@ public class BookServiceImpl implements BookService {
   }
 
   @Override
+  public List<Book> search(String searchTerm) {
+    final String lowercaseTerm = searchTerm.toLowerCase(getSerbianLocale());
+
+    return getAllBooksSorted().stream()
+        .filter(
+            book ->
+                book.getTitle().toLowerCase(getSerbianLocale()).contains(lowercaseTerm)
+                    || book.getAuthors().contains(lowercaseTerm)
+                    || book.getInventoryNumber().toString().contains(lowercaseTerm))
+        .collect(toList());
+  }
+
+  @Override
   public Book getById(String id) {
     log.debug("Getting book by an id: {}", id);
 
-    return this.getAll(TITLE, ASC).stream()
+    return getAllBooksSorted().stream()
         .filter(book -> book.getId().equals(id))
         .findFirst()
         .orElseThrow(() -> new BookNotFoundException(id));
@@ -72,7 +85,7 @@ public class BookServiceImpl implements BookService {
   public Book save(Book book) {
     log.debug("Trying to save the new book: {}", book);
 
-    List<Book> books = getAll(TITLE, ASC);
+    List<Book> books = getAllBooksSorted();
     book.setId(UUID.randomUUID().toString());
     book.setCreatedAt(getFormattedCreatedAt());
     book.setImage(getBookImage(book.getImage()));
@@ -92,7 +105,7 @@ public class BookServiceImpl implements BookService {
     changedBook.setImage(getBookImage(changedBook.getImage()));
 
     List<Book> updatedBooks =
-        getAll(TITLE, ASC).stream()
+        getAllBooksSorted().stream()
             .map(book -> book.getId().equals(id) ? book = changedBook : book)
             .collect(toList());
 
@@ -107,7 +120,7 @@ public class BookServiceImpl implements BookService {
 
     checkIfExists(id);
 
-    List<Book> books = this.getAll(TITLE, ASC);
+    List<Book> books = getAllBooksSorted();
     Boolean deleteResponse = books.removeIf(book -> book.getId().equals(id));
     writeBooksToFile(books);
 
@@ -131,8 +144,12 @@ public class BookServiceImpl implements BookService {
     }
   }
 
+  private List<Book> getAllBooksSorted() {
+    return getAll(TITLE, ASC);
+  }
+
   private void checkIfExists(String bookId) {
-    if (this.getAll(TITLE, ASC).stream().noneMatch(book -> book.getId().equals(bookId))) {
+    if (getAllBooksSorted().stream().noneMatch(book -> book.getId().equals(bookId))) {
       throw new BookNotFoundException(bookId);
     }
   }
@@ -165,7 +182,7 @@ public class BookServiceImpl implements BookService {
   }
 
   private Comparator<Book> getComparatorForTitle(SortingDirection sortingDirection) {
-    Locale locale = new Locale.Builder().setLanguage("sr").setScript("Cyrl").build();
+    Locale locale = getSerbianLocale();
 
     Collator collator = Collator.getInstance(locale);
 
@@ -179,5 +196,9 @@ public class BookServiceImpl implements BookService {
     return sortingDirection == ASC
         ? Comparator.comparing(Book::getCreatedAt)
         : Comparator.comparing(Book::getCreatedAt).reversed();
+  }
+
+  private Locale getSerbianLocale() {
+    return new Locale.Builder().setLanguage("sr").setScript("Cyrl").build();
   }
 }

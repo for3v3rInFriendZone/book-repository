@@ -11,6 +11,8 @@ public interface BookService {
 
   List<Book> getAll(SortingType sortingType, SortingDirection sortingDirection);
 
+  List<Book> search(String searchTerm);
+
   Book getById(String id);
 
   Book save(Book book);
